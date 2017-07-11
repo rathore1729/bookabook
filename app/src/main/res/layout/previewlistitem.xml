@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:padding="15dp"
+    android:background="#2cedecec"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/productName"
+        android:layout_below="@id/product"
+        android:layout_toLeftOf="@+id/productImage"
+        android:text="Name : "
+        android:textSize="20dp"
+        android:textColor="#d6d5d5"
+        android:layout_margin="10dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/productPrice"
+        android:layout_below="@id/productName"
+        android:layout_toLeftOf="@+id/productImage"
+        android:text="Price : ₹ "
+        android:textSize="20dp"
+        android:textColor="#d6d5d5"
+        android:layout_margin="10dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/productMRP"
+        android:layout_below="@id/productPrice"
+        android:layout_toLeftOf="@+id/productImage"
+        android:text="MRP : ₹ "
+        android:textSize="20dp"
+        android:textColor="#d6d5d5"
+        android:layout_margin="10dp"/>
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:id="@+id/productImage"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/productName"
+        android:src="@mipmap/ic_launcher_round"
+        android:layout_marginRight="10dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/productDesc"
+        android:layout_below="@id/productMRP"
+        android:text="Description : "
+        android:textSize="20dp"
+        android:textColor="#d6d5d5"
+        android:layout_margin="10dp"/>
+</RelativeLayout>

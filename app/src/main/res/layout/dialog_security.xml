@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialogback"
+    android:padding="20dp">
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/setsecurity"
+        android:id="@+id/sec_icon"
+        android:layout_margin="7dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sec_title"
+        android:layout_toRightOf="@id/sec_icon"
+        android:text="Set Security Question for your Account"
+        android:textColor="#e64a50"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:layout_marginBottom="5dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_back"
+        android:layout_below="@id/sec_title"
+        android:background="@drawable/blackback"
+        android:backgroundTint="#fff"
+        android:layout_margin="5dp">
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/sec_spinner"
+            android:entries="@array/entries"
+            android:backgroundTint="#fff"
+            android:layout_marginRight="5dp">
+        </Spinner>
+    </RelativeLayout>
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/focusEdit"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ans_back"
+        android:layout_below="@id/spinner_back"
+        android:background="@drawable/blackback"
+        android:backgroundTint="#fff"
+        android:layout_margin="5dp">
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/sec_ans"
+        android:hint="Enter Your Answer"
+        android:maxLines="1"
+        android:drawableRight="@drawable/sec_ans"
+        android:textColor="#0b0b0b"
+        android:textColorHint="#0b0b0b"
+        android:textCursorDrawable="@drawable/cursor"
+        android:background="@drawable/loginselector"
+        android:padding="10dp"/></LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sec_submit"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/ans_back"
+        android:text="submit"
+        android:backgroundTint="#FD5C63"/>
+
+</RelativeLayout>

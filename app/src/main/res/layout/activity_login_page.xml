@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:background="@drawable/bookback"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_gravity="center_vertical"
+    android:padding="40dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/blackback"
+        android:layout_marginBottom="60dp"
+        android:padding="30dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/logintext"
+            android:text=" LOGIN"
+            android:textSize="28sp"
+            android:textColor="#FD5C63"
+            android:textStyle="bold"
+            android:layout_marginBottom="19dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/emailref"
+            android:layout_below="@id/logintext"
+            android:background="@drawable/blackback"
+            android:layout_marginBottom="5dp">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/login_email"
+                android:hint="Enter Your Email"
+                android:inputType="textEmailAddress"
+                android:textColor="#e6e2e2e2"
+                android:textColorHint="#b5e2e2e2"
+                android:textCursorDrawable="@drawable/cursor"
+                android:drawableRight="@drawable/user"
+                android:background="@drawable/loginselector"
+                android:padding="10dp"/></LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/passref"
+            android:layout_below="@id/emailref"
+            android:background="@drawable/blackback"
+            android:layout_marginBottom="16dp">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/login_pass"
+                android:hint="Enter Password "
+                android:inputType="textPassword"
+                android:textColor="#e6e2e2e2"
+                android:textSize="17sp"
+                android:textColorHint="#b5e2e2e2"
+                android:textCursorDrawable="@drawable/cursor"
+                android:drawableRight="@drawable/key"
+                android:background="@drawable/loginselector"
+                android:padding="10dp"/>
+        </LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/loginbtn"
+            android:layout_below="@id/passref"
+            android:text="LOGIN"
+            android:backgroundTint="#FD5C63"
+            android:layout_marginBottom="4dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/forgot"
+            android:layout_below="@id/loginbtn"
+            android:text=" Forgot Password?"
+            android:clickable="true"
+            android:textColor="#f1efef"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/new_user"
+            android:layout_below="@id/loginbtn"
+            android:layout_alignParentRight="true"
+            android:text="New User? "
+            android:clickable="true"
+            android:onClick="click"
+            android:textColor="#60b7fd"/>
+    </RelativeLayout>
+</RelativeLayout>
+</ScrollView>

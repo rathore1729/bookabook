@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@drawable/splash"
+    android:padding="40dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/quote"
+        android:layout_centerHorizontal="true"
+        android:text="A book is a dream that you hold in your hand ..."
+        android:fontFamily="cursive"
+        android:textSize="25sp"
+        android:textColor="#fdfdfd"
+        android:textStyle="italic"
+        android:layout_marginTop="110dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="- NEIL GAIMAN "
+        android:textSize="14sp"
+        android:textColor="#fdfdfd"
+        android:textStyle="italic"
+        android:id="@+id/quoter"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/quote"
+        android:gravity="right"/>
+</RelativeLayout>

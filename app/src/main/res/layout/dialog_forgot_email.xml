@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialogback"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/forgot_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:drawableLeft="@drawable/error"
+        android:text=" Enter Your Email"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="#e64a50"
+        android:textSize="22sp" />
+
+    <LinearLayout
+        android:id="@+id/forgot_email_back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/forgot_title"
+        android:layout_margin="10dp"
+        android:background="@drawable/blackback"
+        android:backgroundTint="#fff">
+
+        <EditText
+            android:id="@+id/forgot_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/loginselector"
+            android:drawableRight="@drawable/email"
+            android:hint="email@example.com"
+            android:inputType="textEmailAddress"
+            android:maxLines="2"
+            android:padding="10dp"
+            android:textColor="#e6e2e2e2"
+            android:textColorHint="#b5e2e2e2"
+            android:textCursorDrawable="@drawable/cursor" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/forgot_ques_back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/forgot_email_back"
+        android:layout_margin="10dp"
+        android:background="@drawable/blackback"
+        android:backgroundTint="#fff"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/forgot_Ques"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/loginselector"
+            android:drawableRight="@drawable/ques"
+            android:padding="10dp"
+            android:text="What was the name of your first dog?"
+            android:textColor="#e6e2e2e2"
+            android:textSize="18dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/forgot_ans_back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/forgot_ques_back"
+        android:layout_margin="10dp"
+        android:background="@drawable/blackback"
+        android:backgroundTint="#fff"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/forgot_answer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/loginselector"
+            android:drawableRight="@drawable/sec_ans_white"
+            android:hint="Enter your Answer"
+            android:inputType="textCapCharacters"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:textColor="#e6e2e2e2"
+            android:textColorHint="#b5e2e2e2"
+            android:textCursorDrawable="@drawable/cursor" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/forgot_Ques_but"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/forgot_ans_back"
+        android:backgroundTint="#FD5C63"
+        android:text="submit" />
+
+    <Button
+        android:id="@+id/forgot_changePass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/forgot_ans_back"
+        android:backgroundTint="#FD5C63"
+        android:text="Change password"
+        android:visibility="gone" />
+
+</RelativeLayout>
