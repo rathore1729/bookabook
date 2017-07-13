@@ -66,7 +66,7 @@ public class LoginPage extends AppCompatActivity {
                             if(enteredEmail.equals("admin@bookabook.com"))
                                 startActivity(new Intent(LoginPage.this,AdminAddProduct.class));
                             else
-                                Toast.makeText(LoginPage.this, "LOGIN SUCCESSFUL", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(LoginPage.this,HomePage.class));
                         else
                             Toast.makeText(LoginPage.this, "Wrong Password!!!", Toast.LENGTH_SHORT).show();
                     else
