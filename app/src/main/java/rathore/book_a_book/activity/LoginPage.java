@@ -60,13 +60,17 @@ public class LoginPage extends AppCompatActivity {
                 if(enteredEmail.equals("") || enteredPass.equals(""))
                     Toast.makeText(LoginPage.this, "Fill Details.", Toast.LENGTH_SHORT).show();
                 else{
+                    int i = 1;
                     Cursor cursor = UserDataTable.verifyAccount(new MyOpenHelper(LoginPage.this).getReadableDatabase(),UserDataTable.EMAIL + " = '" + enteredEmail + "'");
                     if(cursor.moveToNext())
-                        if(enteredEmail.equals(cursor.getString(0)) && enteredPass.equals(cursor.getString(1)))
+                        if(enteredEmail.equals(cursor.getString(0)) && enteredPass.equals(cursor.getString(1))) //biapass
                             if(enteredEmail.equals("admin@bookabook.com"))
                                 startActivity(new Intent(LoginPage.this,AdminAddProduct.class));
-                            else
-                                startActivity(new Intent(LoginPage.this,HomePage.class));
+                            else {
+                                Intent intent = new Intent(LoginPage.this, HomePage.class);
+                                intent.putExtra("userMail",enteredEmail);
+                                startActivity(intent);
+                            }
                         else
                             Toast.makeText(LoginPage.this, "Wrong Password!!!", Toast.LENGTH_SHORT).show();
                     else

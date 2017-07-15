@@ -18,13 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.xml.sax.Parser;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.regex.Pattern;
 
@@ -96,33 +93,29 @@ public class AdminAddProduct extends AppCompatActivity {
             image.setError("Please select Image!!!");
         else{
             try{
-                String filePath = this.getFilesDir().getPath() + "/books.json";
-                FileReader file = new FileReader(filePath);
-                JSONObject objRead = (JSONObject)new JSONParser().parse(file);
-                JSONArray arrayRead = (JSONArray) objRead.get("1");
-                int size = arrayRead.size();
-                Toast.makeText(this, "data : " + objRead.toString(), Toast.LENGTH_SHORT).show();
-
-                JSONObject objWrite = new JSONObject();
+                JSONObject obj = new JSONObject();
+                JSONArray array = new JSONArray();
                 JSONObject arrObj = new JSONObject();
-                JSONArray arrayWrite = new JSONArray();
-                FileWriter fWrite = new FileWriter(filePath);
-
                 arrObj.put("name",name.getText().toString().trim());
                 arrObj.put("ori_price",ori_price.getText().toString().trim());
                 arrObj.put("disc_price",disc_price.getText().toString().trim());
                 arrObj.put("desc",desc.getText().toString().trim());
                 arrObj.put("image_uri",image.getText().toString().trim());
 
-                arrayRead.add(size,arrObj);
-                objWrite.put("1",arrayRead);
+                array.put(arrObj);
+                obj.put("0",array);
+                String filePath = this.getFilesDir().getPath() + "/books.json";
+                File f = new File(filePath);
+                f.createNewFile();
 
-                fWrite.write(objWrite.toString());
-                fWrite.flush();
+                FileWriter file = new FileWriter(f);
+
+                file.write(obj.toString());
+                file.flush();
 
             }
             catch(Exception ex){
-                Toast.makeText(this, "Error in writing : "+ex, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "error : "+ex, Toast.LENGTH_SHORT).show();
             }
             startActivity(new Intent(this,ProductReview.class));
         }

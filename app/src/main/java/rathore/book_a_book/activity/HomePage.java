@@ -1,8 +1,15 @@
 package rathore.book_a_book.activity;
 
+import android.database.Cursor;
+import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,11 +19,42 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import rathore.book_a_book.R;
+import rathore.book_a_book.adapter.CategoryAdapter;
+import rathore.book_a_book.database.MyOpenHelper;
+import rathore.book_a_book.pojos.BookDeal;
+import rathore.book_a_book.tables.UserDataTable;
 
-public class HomePage extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import static rathore.book_a_book.R.id.deal;
+
+public class HomePage extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
+
+    TextView userName,userMail,userDP;
+    ViewPager myPager;
+    ArrayList<BookDeal> arraylist;
+    CategoryAdapter myPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +62,16 @@ public class HomePage extends AppCompatActivity
         setContentView(R.layout.activity_home_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        init();
+        fetchValues("");
+        myPagerAdapter = new CategoryAdapter(this,R.layout.dealitem,arraylist);
+        myPager.setAdapter(myPagerAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "This is gonna be edited", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -42,6 +84,45 @@ public class HomePage extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void init(){
+        userDP = (TextView) findViewById(R.id.userDP);
+        userName = (TextView) findViewById(R.id.userName);
+        userMail = (TextView) findViewById(R.id.userEmail);
+        myPager = (ViewPager) findViewById(deal);
+        arraylist = new ArrayList<>();
+
+
+
+        String rqst = "https://www.googleapis.com/books/v1/volumes?q=all";
+        StringRequest request = new StringRequest(Request.Method.GET, rqst, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(HomePage.this, "Response recieved", Toast.LENGTH_SHORT).show();
+                fetchValues(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(HomePage.this, "Error in web request : " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+        RequestQueue q = Volley.newRequestQueue(this);
+        q.add(request);
+        Timer timer = new Timer();
+        timer.schedule(new MyTimeTask(),3000,3000);
+    }
+
+    private void showUser(){
+        Cursor cursor = UserDataTable.select(new MyOpenHelper(this).getReadableDatabase(),UserDataTable.EMAIL + " = '" + getIntent().getStringExtra("userMail") + "'");
+        cursor.moveToLast();
+        userName.setText(cursor.getString(0));
+        userMail.setText(getIntent().getStringExtra("userMail"));
+        userDP.setText((cursor.getString(0).charAt(0)+"").toUpperCase());
+        GradientDrawable drawable = new GradientDrawable();
+        drawable = (GradientDrawable) userDP.getBackground();
+        drawable.setColor(cursor.getInt(5));
     }
 
     @Override
@@ -57,7 +138,7 @@ public class HomePage extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home_page, menu);
+        getMenuInflater().inflate(R.menu.home_page_menu, menu);
         return true;
     }
 
@@ -99,5 +180,89 @@ public class HomePage extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void fetchValues(String response) {
+        if(response.equals("")){
+            for (int i = 0; i < 5; i++) {
+                try {
+                    BookDeal deal = new BookDeal();
+                    //JSONObject data = (JSONObject) new JSONParser().parse(response);
+                    //JSONArray array = (JSONArray) data.get("items");
+
+
+                    //JSONObject obj = (JSONObject) array.get(i);
+                    //JSONObject innerObj = (JSONObject) obj.get("volumeInfo");
+
+                    //deal[i].setName((String) innerObj.get("title"));         //Title
+                    deal.setName("Book Title");         //Title
+                    //JSONArray auth = (JSONArray) innerObj.get("authors");    //Authors
+                    //String authStr="";
+                    //for (int j=0;j<auth.length();j++)
+                    //    authStr = auth.get(j) + ",";
+                    //deal[i].setAuthor(authStr.substring(0,authStr.length()));
+                    deal.setAuthor("- Author Name");
+                    //deal[i].setDesc((String) innerObj.get("description"));  //description
+                    deal.setDesc(("Book description of the book you are looking at is being loaded here ...and more"));  //description
+                    double mrp = Math.random() * 200 + 220;                     //MRP
+                    int disc = (int) (Math.random() * 20 + 30);                 //Discount
+                    deal.setDisc(disc + "%");
+                    deal.setMrp((mrp + "").substring(0,6));
+                    deal.setPrice((mrp * (100 - disc) / 100 + "").substring(0,6));               //Price
+                    //JSONObject img = (JSONObject) innerObj.get("imageLinks");   //Image
+                    //deal[i].setImgURI((String) img.get("thumbnail"));
+                    deal.setImgURI(("http://books.google.com/books/content?id=oQ8mv52KmBIC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"));
+                    arraylist.add(i,deal);
+                    Toast.makeText(HomePage.this, "Data in loop : " + deal.toString(), Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(this, "Error in loop : " + e, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }else{
+            for(int i=0;i<5;i++)
+            try{
+            BookDeal deal = new BookDeal();
+            JSONObject data = (JSONObject) new JSONParser().parse(response);
+            JSONArray array = (JSONArray) data.get("items");
+            JSONObject obj = (JSONObject) array.get(i);
+            JSONObject innerObj = (JSONObject) obj.get("volumeInfo");
+
+            deal.setName((String) innerObj.get("title"));         //Title
+            JSONArray auth = (JSONArray) innerObj.get("authors");    //Authors
+            String authStr="";
+            for (int j=0;j<auth.size();j++)
+                authStr = auth.get(j) + ",";
+            deal.setAuthor("- " + authStr.substring(0,authStr.length()-1));
+            JSONObject desc = (JSONObject) obj.get("searchInfo");
+            deal.setDesc((desc.get("textSnippet")+"12345678901234567890123456789012345678901234567890").substring(0,80)+"  ...and more");  //description
+            double mrp = Math.random() * 200 + 220;                     //MRP
+            int disc = (int) (Math.random() * 20 + 30);                 //Discount
+            deal.setDisc(disc + "%");
+            deal.setMrp((mrp + "").substring(0,6));
+            deal.setPrice((mrp * (100 - disc) / 100 + "").substring(0,6));               //Price
+            desc = (JSONObject) obj.get("volumeInfo");
+            JSONObject img = (JSONObject) desc.get("imageLinks");   //Image
+            deal.setImgURI((img.get("smallThumbnail")+""));
+            arraylist.add(i,deal);
+            Toast.makeText(HomePage.this, "Data in loop : " + deal.toString(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Error in loop : " + e, Toast.LENGTH_SHORT).show();
+        }
+        }
+    }
+
+    class MyTimeTask extends TimerTask{
+
+        @Override
+        public void run() {
+            myPager.post(new Runnable() {
+                public void run() {
+                    if (myPager.getCurrentItem() < 4)
+                        myPager.setCurrentItem(myPager.getCurrentItem() + 1, true);
+                    else
+                        myPager.setCurrentItem(0, true);
+                }
+            });
+        }
     }
 }

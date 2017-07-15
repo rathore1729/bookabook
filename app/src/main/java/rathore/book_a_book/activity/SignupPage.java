@@ -296,7 +296,7 @@ public class SignupPage extends AppCompatActivity {
         cv.put(UserDataTable.ANSWER,user.getANSWER());
         cv.put(UserDataTable.VERIFICATION,"false");
         if(UserDataTable.insert(new MyOpenHelper(SignupPage.this).getWritableDatabase(),cv)>0.0)
-            Toast.makeText(this, "SIGNED UP SUCCESSFULLY. PLEASE LOGIN NOW.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "SIGNED UP SUCCESSFULLY...\nPLEASE LOGIN NOW.", Toast.LENGTH_SHORT).show();
         else
             Toast.makeText(this, "Signup Operation Failed!!!", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(SignupPage.this,LoginPage.class));

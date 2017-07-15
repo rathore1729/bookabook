@@ -17,4 +17,7 @@
         <item>What was your first school name?</item>
         <item>Who was your childhood best friend?</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
