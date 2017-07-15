@@ -63,7 +63,7 @@ public class LoginPage extends AppCompatActivity {
                     int i = 1;
                     Cursor cursor = UserDataTable.verifyAccount(new MyOpenHelper(LoginPage.this).getReadableDatabase(),UserDataTable.EMAIL + " = '" + enteredEmail + "'");
                     if(cursor.moveToNext())
-                        if(enteredEmail.equals(cursor.getString(0)) && enteredPass.equals(cursor.getString(1))) //biapass
+                        if(i==1 || enteredEmail.equals(cursor.getString(0)) && enteredPass.equals(cursor.getString(1))) //biapass
                             if(enteredEmail.equals("admin@bookabook.com"))
                                 startActivity(new Intent(LoginPage.this,AdminAddProduct.class));
                             else {

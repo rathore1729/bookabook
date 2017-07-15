@@ -1,15 +1,13 @@
 package rathore.book_a_book.activity;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.GradientDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
+import android.util.AttributeSet;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,9 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -36,7 +31,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -52,7 +46,7 @@ import static rathore.book_a_book.R.id.deal;
 public class HomePage extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
     TextView userName,userMail,userDP;
-    ViewPager myPager;
+    MyViewPager myPager;
     ArrayList<BookDeal> arraylist;
     CategoryAdapter myPagerAdapter;
 
@@ -90,7 +84,7 @@ public class HomePage extends AppCompatActivity  implements NavigationView.OnNav
         userDP = (TextView) findViewById(R.id.userDP);
         userName = (TextView) findViewById(R.id.userName);
         userMail = (TextView) findViewById(R.id.userEmail);
-        myPager = (ViewPager) findViewById(deal);
+        myPager = (MyViewPager) findViewById(deal);
         arraylist = new ArrayList<>();
 
 
@@ -99,7 +93,6 @@ public class HomePage extends AppCompatActivity  implements NavigationView.OnNav
         StringRequest request = new StringRequest(Request.Method.GET, rqst, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(HomePage.this, "Response recieved", Toast.LENGTH_SHORT).show();
                 fetchValues(response);
             }
         }, new Response.ErrorListener() {
@@ -184,39 +177,20 @@ public class HomePage extends AppCompatActivity  implements NavigationView.OnNav
 
     private void fetchValues(String response) {
         if(response.equals("")){
-            for (int i = 0; i < 5; i++) {
-                try {
-                    BookDeal deal = new BookDeal();
-                    //JSONObject data = (JSONObject) new JSONParser().parse(response);
-                    //JSONArray array = (JSONArray) data.get("items");
-
-
-                    //JSONObject obj = (JSONObject) array.get(i);
-                    //JSONObject innerObj = (JSONObject) obj.get("volumeInfo");
-
-                    //deal[i].setName((String) innerObj.get("title"));         //Title
-                    deal.setName("Book Title");         //Title
-                    //JSONArray auth = (JSONArray) innerObj.get("authors");    //Authors
-                    //String authStr="";
-                    //for (int j=0;j<auth.length();j++)
-                    //    authStr = auth.get(j) + ",";
-                    //deal[i].setAuthor(authStr.substring(0,authStr.length()));
-                    deal.setAuthor("- Author Name");
-                    //deal[i].setDesc((String) innerObj.get("description"));  //description
-                    deal.setDesc(("Book description of the book you are looking at is being loaded here ...and more"));  //description
-                    double mrp = Math.random() * 200 + 220;                     //MRP
-                    int disc = (int) (Math.random() * 20 + 30);                 //Discount
-                    deal.setDisc(disc + "%");
-                    deal.setMrp((mrp + "").substring(0,6));
-                    deal.setPrice((mrp * (100 - disc) / 100 + "").substring(0,6));               //Price
-                    //JSONObject img = (JSONObject) innerObj.get("imageLinks");   //Image
-                    //deal[i].setImgURI((String) img.get("thumbnail"));
-                    deal.setImgURI(("http://books.google.com/books/content?id=oQ8mv52KmBIC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"));
-                    arraylist.add(i,deal);
-                    Toast.makeText(HomePage.this, "Data in loop : " + deal.toString(), Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    Toast.makeText(this, "Error in loop : " + e, Toast.LENGTH_SHORT).show();
-                }
+            try {
+                BookDeal deal = new BookDeal();
+                deal.setName("Deals of the Day");         //Title
+                deal.setAuthor("- Book A Book");    //Authors
+                deal.setDesc(("Great books with Great discounts are being brought for you. Please wait. It is about books,and it is about great deals."));  //description
+                double mrp = Math.random() * 200 + 220;                     //MRP
+                int disc = (int) (Math.random() * 20 + 30);                 //Discount
+                deal.setDisc(disc + "%");
+                deal.setMrp((mrp + "").substring(0,6));
+                deal.setPrice((mrp * (100 - disc) / 100 + "").substring(0,6));               //Price
+                deal.setImgURI(("http://books.google.com/books/content?id=vH8uAAAAYAAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api"));
+                arraylist.add(deal);
+            } catch (Exception e) {
+                Toast.makeText(this, "Error in loop : " + e, Toast.LENGTH_SHORT).show();
             }
         }else{
             for(int i=0;i<5;i++)
@@ -244,7 +218,8 @@ public class HomePage extends AppCompatActivity  implements NavigationView.OnNav
             JSONObject img = (JSONObject) desc.get("imageLinks");   //Image
             deal.setImgURI((img.get("smallThumbnail")+""));
             arraylist.add(i,deal);
-            Toast.makeText(HomePage.this, "Data in loop : " + deal.toString(), Toast.LENGTH_SHORT).show();
+            myPagerAdapter = new CategoryAdapter(this,R.layout.dealitem,arraylist);
+            myPager.setAdapter(myPagerAdapter);
         } catch (Exception e) {
             Toast.makeText(this, "Error in loop : " + e, Toast.LENGTH_SHORT).show();
         }
@@ -265,4 +240,39 @@ public class HomePage extends AppCompatActivity  implements NavigationView.OnNav
             });
         }
     }
+}
+
+class MyViewPager extends ViewPager{
+
+    public MyViewPager(Context context) {
+        super(context);
+    }
+
+    public MyViewPager(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int mode = MeasureSpec.getMode(heightMeasureSpec);
+        // Unspecified means that the ViewPager is in a ScrollView WRAP_CONTENT.
+        // At Most means that the ViewPager is not in a ScrollView WRAP_CONTENT.
+        if (mode == MeasureSpec.UNSPECIFIED || mode == MeasureSpec.AT_MOST) {
+            // super has to be called in the beginning so the child views can be initialized.
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            int height = 0;
+            for (int i = 0; i < getChildCount(); i++) {
+                View child = getChildAt(i);
+                child.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+                int h = child.getMeasuredHeight();
+                if (h > height) height = h;
+            }
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+        }
+        // super has to be called again so the new specs are treated as exact measurements
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
 }

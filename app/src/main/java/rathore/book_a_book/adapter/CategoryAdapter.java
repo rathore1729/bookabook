@@ -1,37 +1,19 @@
 package rathore.book_a_book.adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Parcelable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-import org.json.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
 import java.util.ArrayList;
 
-import rathore.book_a_book.DealFragment;
 import rathore.book_a_book.R;
 import rathore.book_a_book.pojos.BookDeal;
 
@@ -54,7 +36,7 @@ public class CategoryAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return 5;
+        return arrayList.size();
     }
 
     @Override
