@@ -1,6 +1,7 @@
 package rathore.book_a_book.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -15,6 +17,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.ArrayList;
 
 import rathore.book_a_book.R;
+import rathore.book_a_book.activity.ProductListingActivity;
+import rathore.book_a_book.activity.ProductPage;
 import rathore.book_a_book.pojos.BookDeal;
 
 /**
@@ -49,6 +53,14 @@ public class CategoryAdapter extends PagerAdapter {
         TextView mrp = view.findViewById(R.id.bookMRP);
         TextView disc = view.findViewById(R.id.bookDisc);
         ImageView img = view.findViewById(R.id.bookImage);
+
+        view.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Intent intent = new Intent(context,ProductPage.class);
+                intent.putExtra("link",arrayList.get(position).getSelfLink());
+                context.startActivity(intent);
+            }
+        });
 
         BookDeal deal = arrayList.get(position);
         name.setText(deal.getName());

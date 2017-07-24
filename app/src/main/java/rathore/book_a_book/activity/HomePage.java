@@ -1,6 +1,7 @@
 package rathore.book_a_book.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -30,6 +33,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -39,6 +43,7 @@ import rathore.book_a_book.R;
 import rathore.book_a_book.adapter.CategoryAdapter;
 import rathore.book_a_book.database.MyOpenHelper;
 import rathore.book_a_book.pojos.BookDeal;
+import rathore.book_a_book.pojos.Links;
 import rathore.book_a_book.tables.UserDataTable;
 
 import static rathore.book_a_book.R.id.deal;
@@ -89,8 +94,7 @@ public class HomePage extends AppCompatActivity  implements NavigationView.OnNav
 
 
 
-        String rqst = "https://www.googleapis.com/books/v1/volumes?q=all";
-        StringRequest request = new StringRequest(Request.Method.GET, rqst, new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.GET, Links.ALL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 fetchValues(response);
@@ -184,7 +188,7 @@ public class HomePage extends AppCompatActivity  implements NavigationView.OnNav
                 deal.setDesc(("Great books with Great discounts are being brought for you. Please wait. It is about books,and it is about great deals."));  //description
                 double mrp = Math.random() * 200 + 220;                     //MRP
                 int disc = (int) (Math.random() * 20 + 30);                 //Discount
-                deal.setDisc(disc + "%");
+                deal.setDisc(disc + "% OFF");
                 deal.setMrp((mrp + "").substring(0,6));
                 deal.setPrice((mrp * (100 - disc) / 100 + "").substring(0,6));               //Price
                 deal.setImgURI(("http://books.google.com/books/content?id=vH8uAAAAYAAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api"));
@@ -193,35 +197,53 @@ public class HomePage extends AppCompatActivity  implements NavigationView.OnNav
                 Toast.makeText(this, "Error in loop : " + e, Toast.LENGTH_SHORT).show();
             }
         }else{
+            JSONObject data = null;
+            try {
+                data = (JSONObject) new JSONParser().parse(response);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            JSONArray array = (JSONArray) data.get("items");
+
+            int[] index = new int[40];                      // Random deal of the day
+            for(int i = 0;i<40;i++)
+                index[i]=i;
+            int tmp,random;
+            for(int i=0;i<40;i++){
+                random = (int) (Math.random()*39);
+                tmp = index[random];
+                index[random] = index[i];
+                index[i] = tmp;
+            }
+
             for(int i=0;i<5;i++)
             try{
             BookDeal deal = new BookDeal();
-            JSONObject data = (JSONObject) new JSONParser().parse(response);
-            JSONArray array = (JSONArray) data.get("items");
-            JSONObject obj = (JSONObject) array.get(i);
+            JSONObject obj = (JSONObject) array.get(index[i]);
             JSONObject innerObj = (JSONObject) obj.get("volumeInfo");
 
+            deal.setSelfLink((String) obj.get("selfLink"));         //SelfLink
             deal.setName((String) innerObj.get("title"));         //Title
             JSONArray auth = (JSONArray) innerObj.get("authors");    //Authors
             String authStr="";
             for (int j=0;j<auth.size();j++)
                 authStr = auth.get(j) + ",";
             deal.setAuthor("- " + authStr.substring(0,authStr.length()-1));
-            JSONObject desc = (JSONObject) obj.get("searchInfo");
-            deal.setDesc((desc.get("textSnippet")+"12345678901234567890123456789012345678901234567890").substring(0,80)+"  ...and more");  //description
+            deal.setDesc((innerObj.get("description")+"12345678901234567890123456789012345678901234567890").substring(0,80)+"  ...and more");  //description
+
             double mrp = Math.random() * 200 + 220;                     //MRP
             int disc = (int) (Math.random() * 20 + 30);                 //Discount
-            deal.setDisc(disc + "%");
+            deal.setDisc(disc + "% OFF");
             deal.setMrp((mrp + "").substring(0,6));
             deal.setPrice((mrp * (100 - disc) / 100 + "").substring(0,6));               //Price
-            desc = (JSONObject) obj.get("volumeInfo");
+            JSONObject desc = (JSONObject) obj.get("volumeInfo");
             JSONObject img = (JSONObject) desc.get("imageLinks");   //Image
             deal.setImgURI((img.get("smallThumbnail")+""));
             arraylist.add(i,deal);
             myPagerAdapter = new CategoryAdapter(this,R.layout.dealitem,arraylist);
             myPager.setAdapter(myPagerAdapter);
         } catch (Exception e) {
-            Toast.makeText(this, "Error in loop : " + e, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error in hii : " + e, Toast.LENGTH_SHORT).show();
         }
         }
     }
@@ -239,6 +261,69 @@ public class HomePage extends AppCompatActivity  implements NavigationView.OnNav
                 }
             });
         }
+    }
+    
+    public void showAll(View view){
+        Intent intent = new Intent(HomePage.this,ProductListingActivity.class);
+        intent.putExtra("link",Links.ALL);
+        intent.putExtra("title","ALL BOOKS");
+        startActivity(intent);
+    }
+
+    public void showNovel(View view){
+        Intent intent = new Intent(HomePage.this,ProductListingActivity.class);
+        intent.putExtra("link",Links.NOVEL);
+        intent.putExtra("title","NOVELS");
+        startActivity(intent);
+    }
+
+    public void showMagazine(View view){
+        Intent intent = new Intent(HomePage.this,ProductListingActivity.class);
+        intent.putExtra("link",Links.MAGAZINE);
+        intent.putExtra("title","MAGAZINES");
+        startActivity(intent);
+    }
+
+    public void showEducation(View view){
+        Intent intent = new Intent(HomePage.this,ProductListingActivity.class);
+        intent.putExtra("link",Links.EDUCATION);
+        intent.putExtra("title","EDUCATION");
+        startActivity(intent);
+    }
+
+    public void showBusiness(View view){
+        Intent intent = new Intent(HomePage.this,ProductListingActivity.class);
+        intent.putExtra("link",Links.BUSINESS);
+        intent.putExtra("title","BUSINESS");
+        startActivity(intent);
+    }
+
+    public void showFiction(View view){
+        Intent intent = new Intent(HomePage.this,ProductListingActivity.class);
+        intent.putExtra("link",Links.FICTION);
+        intent.putExtra("title","FICTION");
+        startActivity(intent);
+    }
+
+    public void showBiography(View view){
+        Intent intent = new Intent(HomePage.this,ProductListingActivity.class);
+        intent.putExtra("link",Links.BIOGRAPHY);
+        intent.putExtra("title","BIOGRAPHIES");
+        startActivity(intent);
+    }
+
+    public void showInspiration(View view){
+        Intent intent = new Intent(HomePage.this,ProductListingActivity.class);
+        intent.putExtra("link",Links.INSPIRATION);
+        intent.putExtra("title","INSPIRATION");
+        startActivity(intent);
+    }
+
+    public void showReligious(View view){
+        Intent intent = new Intent(HomePage.this,ProductListingActivity.class);
+        intent.putExtra("link",Links.RELIGIOUS);
+        intent.putExtra("title","RELIGION");
+        startActivity(intent);
     }
 }
 

@@ -2,9 +2,14 @@ package rathore.book_a_book.activity;
 
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.constraint.solver.widgets.Snapshot;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,18 +23,28 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.regex.Pattern;
 
 import rathore.book_a_book.R;
 import rathore.book_a_book.database.MyOpenHelper;
+import rathore.book_a_book.pojos.Links;
 import rathore.book_a_book.pojos.UserPojo;
 import rathore.book_a_book.tables.UserDataTable;
 
 public class SignupPage extends AppCompatActivity {
+    ScrollView signUp;
     EditText signName,signEmail,signNum,signPass,signConfPass;
     TextView registered;
     CheckBox signTerms;
@@ -55,8 +70,11 @@ public class SignupPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 hideKeyPad();
-                validation();
-            }
+                if(isNetworkAvailable())
+                    validation();
+                else
+                    Snackbar.make(view,"No Internet connection available. Please check your network settings.",Snackbar.LENGTH_LONG).show();
+                }
         });
         
         signBtnNO.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +98,7 @@ public class SignupPage extends AppCompatActivity {
     }
 
     private void init() {
+        signUp = (ScrollView) findViewById(R.id.signup);
         signName = (EditText) findViewById(R.id.signname);
         signEmail = (EditText) findViewById(R.id.signemail);
         signNum = (EditText) findViewById(R.id.signnum);
@@ -134,8 +153,12 @@ public class SignupPage extends AppCompatActivity {
         public void afterTextChanged(Editable editable) {
             String email = signEmail.getText().toString();
             if(!email.equals(""))
-                if(!Pattern.matches("[\\w.@]+",email))
-                    signEmail.setError("INVALID CHARACTERS IN EMAIL ADDRESS !!!");
+                if(email.contains("@"))
+                    if(!Pattern.matches("[\\w.]+[@][\\w.]*",email))
+                        signEmail.setError("INVALID CHARACTERS IN EMAIL ADDRESS !!!");
+                    else
+                        if(!Pattern.matches("[\\w.@]+",email))
+                            signEmail.setError("INVALID CHARACTERS IN EMAIL ADDRESS !!!");
         }
     };
     
@@ -164,58 +187,47 @@ public class SignupPage extends AppCompatActivity {
         String userconf = signConfPass.getText().toString();
         Boolean terms = signTerms.isChecked();
 
-        if(username.equals("")) {
+        if (username.equals("")) {
             signName.setError("PLEASE ENTER YOUR NAME");
-            flag = 1;
-        }else if(!Pattern.matches("[A-Za-z ]+",username)){
+            showError();
+        } else if (!Pattern.matches("[A-Za-z ]+", username)) {
             signName.setError("INVALID CHARACTERS IN NAME !!!");
-            flag=1;
-        }else if(usercont_num.equals("")){
+            showError();
+        } else if (usercont_num.equals("")) {
             signNum.setError("PLEASE ENTER MOBILE NUMBER");
-            flag=1;
-        }else if(!Pattern.matches("[789]{1}[\\d]{9}",usercont_num)){
+            showError();
+        } else if (!Pattern.matches("[789]{1}[\\d]{9}", usercont_num)) {
             signNum.setError("MOBILE NUMBER INVALID OR TOO SHORT !!!");
-            flag=1;
-        }else if(usermail.equals("")){
+            showError();
+        } else if (usermail.equals("")) {
             signEmail.setError("PLEASE ENTER EMAIL ADDRESS");
-            flag=1;
-        }else if(!Pattern.matches("[\\w.]+@[a-zA-Z0-9_]+[.][a-z]+",usermail)){
+            showError();
+        } else if (!Pattern.matches("[\\w.]+@[a-zA-Z0-9_]+[.][a-z]+", usermail)) {
             signEmail.setError("INVALID EMAIL ADDRESS !!!");
-            flag=1;
-        }else if(checkExisting(usermail)){
-            signEmail.setError("AN ACCOUNT ALREADY EXISTS WITH THE SAME EMAIL ADDRESS");
-            flag=1;
-        }else if(userpass.equals("")){
+            showError();
+        } else if (userpass.equals("")) {
             signPass.setError("PLEASE ENTER PASSWORD");
-            flag=1;
-        }else if(!Pattern.matches(".{6,}",userpass) ){
+            showError();
+        } else if (!Pattern.matches(".{6,}", userpass)) {
             signPass.setError("PASSWORD MUST BE AT LEAST 6 CHARACTERS LONG !!!");
-            flag=1;
-        }else if( !Pattern.matches(".*[a-z]+.*",userpass) || !Pattern.matches(".*[A-Z]+.*",userpass) || !Pattern.matches(".*[0-9]+.*",userpass) || !Pattern.matches(".*[^\\w\\s].*+",userpass) ) {
+            showError();
+        } else if (!Pattern.matches(".*[a-z]+.*", userpass) || !Pattern.matches(".*[A-Z]+.*", userpass) || !Pattern.matches(".*[0-9]+.*", userpass) || !Pattern.matches(".*[^\\w\\s].*+", userpass)) {
             signPass.setError("Password must contain one digit,one lowercase,one uppercase and one special character");
-            flag = 1;
-        }else if(userconf.equals("")){
+            showError();
+        } else if (userconf.equals("")) {
             signConfPass.setError("PLEASE ENTER PASSWORD AGAIN");
-            flag=1;
-        }else if(!userpass.equals(userconf)){
+            showError();
+        } else if (!userpass.equals(userconf)) {
             signConfPass.setError("PASSWORD DOES'T MATCH !!!");
-            flag=1;
-        }
-
-        if(flag!=0)
-            Toast.makeText(this, "PLEASE ENTER ALL FIELDS CORRECTLY", Toast.LENGTH_SHORT).show();
-        else if(!terms)
+            showError();
+        } else if(!terms) {
             Toast.makeText(this, "PLEASE ACCEPT TERMS AND CONDITIONS", Toast.LENGTH_SHORT).show();
-            else {
-            Toast.makeText(this, "JUST ONE MORE STEP", Toast.LENGTH_SHORT).show();
-            UserPojo user = new UserPojo();
-            user.setNAME(username);
-            user.setEMAIL(usermail);
-            user.setPASSWORD(userpass);
-            user.setPHONE(usercont_num);
-            user.setBACKCOLOR();
-            setSecurity(user);
-        }
+        } else
+            checkExisting(username, usermail, userpass, usercont_num);
+    }
+
+    private void showError() {
+        Toast.makeText(this, "PLEASE ENTER ALL FIELDS CORRECTLY", Toast.LENGTH_SHORT).show();
     }
 
     private void setSecurity(final UserPojo user){
@@ -265,18 +277,24 @@ public class SignupPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 hideKeyPad();
-                if(ques_pos!=0){
-                    if(sec_ans.getText().toString().trim().equals(""))
-                        Toast.makeText(SignupPage.this, "Please Enter answer to the Security Question", Toast.LENGTH_SHORT).show();
-                    else{
-                        user.setSEC_QUES(ques);
-                        user.setANSWER(sec_ans.getText().toString().trim().toUpperCase());
-                        registerUser(user);
-                        dialog.cancel();
-                    }
+                if(!isNetworkAvailable())
+                    Snackbar.make(view,"No Internet connection available. Please check your network settings.",Snackbar.LENGTH_LONG).show();
+                else {
+                    if (ques_pos != 0) {
+                        if (sec_ans.getText().toString().trim().equals(""))
+                            Toast.makeText(SignupPage.this, "Please Enter answer to the Security Question", Toast.LENGTH_SHORT).show();
+                        else {
+                            user.setSEC_QUES(ques);
+                            user.setANSWER(sec_ans.getText().toString().trim().toUpperCase());
+                            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                            DatabaseReference userRef = firebaseDatabase.getReference("users");
+                            userRef.child(user.getPHONE()).setValue(user);
+                            registerUser(user);
+                            dialog.cancel();
+                        }
+                    } else
+                        Toast.makeText(SignupPage.this, "Please Select a Security Question", Toast.LENGTH_SHORT).show();
                 }
-                else
-                    Toast.makeText(SignupPage.this, "Please Select a Security Question", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -296,7 +314,7 @@ public class SignupPage extends AppCompatActivity {
         cv.put(UserDataTable.ANSWER,user.getANSWER());
         cv.put(UserDataTable.VERIFICATION,"false");
         if(UserDataTable.insert(new MyOpenHelper(SignupPage.this).getWritableDatabase(),cv)>0.0)
-            Toast.makeText(this, "SIGNED UP SUCCESSFULLY...\nPLEASE LOGIN NOW.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "SIGNED UP SUCCESSFULLY.\nPLEASE LOGIN NOW.", Toast.LENGTH_SHORT).show();
         else
             Toast.makeText(this, "Signup Operation Failed!!!", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(SignupPage.this,LoginPage.class));
@@ -308,13 +326,78 @@ public class SignupPage extends AppCompatActivity {
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
     }
 
-    private boolean checkExisting(String usermail){
-        Cursor cursor = UserDataTable.askEmail(new MyOpenHelper(this).getReadableDatabase(),null);
-        if(cursor!=null)
-            while (cursor.moveToNext()){
-                if(cursor.getString(0).equals(usermail))
-                    return true;
+    private void checkExisting(final String username, final String usermail, final String userpass, final String usercont_num){
+        Links.showDialog(this,"Fetching information... ");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Links.cancelDialog();
+                boolean phoneExists = false, emailExists = false, success = true;
+                for(DataSnapshot snap : dataSnapshot.getChildren()){
+                    UserPojo user = snap.getValue(UserPojo.class);
+                    if(usercont_num.equals(user.getPHONE()))
+                        phoneExists = true;
+                    if(usermail.equals(user.getEMAIL()))
+                        emailExists = true;
+                }
+
+                if(phoneExists) {
+                    signNum.setError("AN ACCOUNT ALREADY EXISTS WITH THE SAME PHONE NUMBER");
+                    Toast.makeText(SignupPage.this, "AN ACCOUNT ALREADY EXISTS WITH THE SAME PHONE NUMBER", Toast.LENGTH_SHORT).show();
+                    success = false;
+                }
+
+                if(emailExists) {
+                    signEmail.setError("AN ACCOUNT ALREADY EXISTS WITH THE SAME EMAIL ADDRESS");
+                    Toast.makeText(SignupPage.this, "AN ACCOUNT ALREADY EXISTS WITH THE SAME EMAIL ADDRESS", Toast.LENGTH_SHORT).show();
+                    success = false;
+                }
+
+                if(success) {
+                    Toast.makeText(SignupPage.this, "JUST ONE MORE STEP", Toast.LENGTH_SHORT).show();
+                    UserPojo user = new UserPojo();
+                    user.setNAME(username);
+                    user.setEMAIL(usermail);
+                    user.setPASSWORD(userpass);
+                    user.setPHONE(usercont_num);
+                    user.setBACKCOLOR();
+                    setSecurity(user);
+                } else{
+                    final boolean finalEmailExists = emailExists;
+                    final boolean finalPhoneExists = phoneExists;
+                    Snackbar.make(signUp,"USER ALREADY REGISTERED!!!",Snackbar.LENGTH_LONG).setAction("RESET", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if(finalEmailExists) {
+                                signEmail.setText("");
+                                signEmail.setError(null);
+                            }
+                            if(finalPhoneExists){
+                                signNum.setText("");
+                                signNum.setError(null);
+                            }
+                        }
+                    }).show();
+                }
             }
-        return false;
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Links.cancelDialog();
+                Toast.makeText(SignupPage.this, "Network error!!!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private boolean isNetworkAvailable() {
+        try{
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            return (activeNetworkInfo != null && activeNetworkInfo.isConnected());
+        }catch (Exception e){
+            Toast.makeText(this, "Error : " + e, Toast.LENGTH_SHORT).show();
+            return false;
+        }
     }
 }

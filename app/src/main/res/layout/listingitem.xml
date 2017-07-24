@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/curveback"
+        android:backgroundTint="#64cdcece"
+        android:padding="8dp">
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/listingImage"
+            android:adjustViewBounds="true"
+            android:src="@drawable/thumbnailsmall"
+            android:padding="5dp"
+            android:background="@drawable/lineback"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/listingName"
+                android:text="Book Name"
+                android:textSize="18sp"
+                android:textColor="#c16060"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/listingAuthor"
+                android:text="By - "
+                android:textSize="15sp"
+                android:textColor="#c16060"
+                android:layout_marginTop="10dp"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bookPriceBack"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/listingPrice"
+                    android:text="₹ "
+                    android:textColor="#225a7e"
+                    android:textSize="14sp"/>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/listingMRP"
+                        android:text=" ₹ "
+                        android:textSize="14sp"
+                        android:layout_marginLeft="10dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="---------------"
+                        android:textSize="14sp"
+                        android:layout_marginLeft="10dp"/>
+                </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/listingDisc"
+                    android:text="56% OFF"
+                    android:textSize="14sp"
+                    android:textColor="#c16060"
+                    android:layout_marginLeft="10dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

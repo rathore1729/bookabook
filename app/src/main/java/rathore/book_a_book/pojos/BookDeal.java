@@ -12,6 +12,7 @@ public class BookDeal {
     String mrp;
     String disc;
     String imgURI;
+    String selfLink;
 
     @Override
     public String toString() {
@@ -23,7 +24,16 @@ public class BookDeal {
                 ", mrp='" + mrp + '\'' +
                 ", disc='" + disc + '\'' +
                 ", imgURI='" + imgURI + '\'' +
+                ", selfLink='" + selfLink + '\'' +
                 '}';
+    }
+
+    public String getSelfLink() {
+        return selfLink;
+    }
+
+    public void setSelfLink(String selfLink) {
+        this.selfLink = selfLink;
     }
 
     public String getPrice() {

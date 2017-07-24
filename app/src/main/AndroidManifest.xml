@@ -3,7 +3,8 @@
     package="rathore.book_a_book">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -17,8 +18,9 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.SignupPage"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".activity.SplashActivity">
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".activity.SplashActivity"
+            android:theme="@style/NoBarTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,7 +36,10 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activity.AdminAddProduct" />
         <activity android:name=".activity.ProductReview" />
-        <activity android:name=".activity.AdminPage"></activity>
+        <activity android:name=".activity.AdminPage" />
+        <activity android:name=".activity.ProductListingActivity" />
+        <activity android:name=".activity.ProductPage" />
+        <activity android:name=".activity.ShoppingCart"></activity>
     </application>
 
 </manifest>
