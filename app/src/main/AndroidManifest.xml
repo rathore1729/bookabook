@@ -16,10 +16,13 @@
         <activity
             android:name=".activity.LoginPage"
             android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".activity.SignupPage"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activity.SplashActivity"
+
+        <activity
+            android:name=".activity.SplashActivity"
             android:theme="@style/NoBarTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,19 +30,32 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.HomePage"
             android:label="@string/title_activity_home_page"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activity.ForgotPasswordActivity"
             android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name=".activity.EditProfile"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity android:name=".activity.ProductListingActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name=".activity.AdminAddProduct" />
         <activity android:name=".activity.ProductReview" />
-        <activity android:name=".activity.AdminPage" />
-        <activity android:name=".activity.ProductListingActivity" />
         <activity android:name=".activity.ProductPage" />
-        <activity android:name=".activity.ShoppingCart"></activity>
+        <activity android:name=".activity.MyOrderActivity" />
+        <activity android:name=".activity.MyCartActivity" />
+        <activity android:name=".activity.ContactUsActivity"></activity>
     </application>
 
 </manifest>

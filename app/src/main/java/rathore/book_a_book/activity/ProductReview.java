@@ -1,25 +1,18 @@
 package rathore.book_a_book.activity;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.FileReader;
 import java.util.ArrayList;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import rathore.book_a_book.R;
 import rathore.book_a_book.adapter.PreviewAdapter;
 import rathore.book_a_book.pojos.ProductPojo;
@@ -41,7 +34,7 @@ public class ProductReview extends AppCompatActivity {
     private void init() {
         list = (ListView) findViewById(R.id.list);
         arrayList = new ArrayList<>();
-        adapter = new PreviewAdapter(this,R.layout.previewlistitem,arrayList);
+        adapter = new PreviewAdapter(this,R.layout.listitempreview,arrayList);
     }
 
     private void showData(){

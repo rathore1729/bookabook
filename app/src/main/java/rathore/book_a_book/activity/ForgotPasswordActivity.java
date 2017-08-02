@@ -1,7 +1,9 @@
 package rathore.book_a_book.activity;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -12,24 +14,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.regex.Pattern;
 
 import rathore.book_a_book.R;
 import rathore.book_a_book.database.MyOpenHelper;
+import rathore.book_a_book.pojos.Links;
 import rathore.book_a_book.tables.UserDataTable;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
     EditText resetPass,resetPassConf;
     Button resetYes,resetNo;
-    String resetpassEmail;
+    String resetpassPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
         Intent intent = this.getIntent();
-        resetpassEmail = intent.getStringExtra("resetpassEmail");
-        Toast.makeText(this, "Resetting Password for " + resetpassEmail, Toast.LENGTH_SHORT).show();
+        resetpassPhone = intent.getStringExtra("resetpass");
+        Toast.makeText(this, "Resetting Password for " + resetpassPhone, Toast.LENGTH_SHORT).show();
 
         init();
         methodListeners();
@@ -62,13 +68,14 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         resetYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Links.hideKeyPad(ForgotPasswordActivity.this);
                 validate();
             }
         });
         resetNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ForgotPasswordActivity.this,LoginPage.class));
+                Links.hideKeyPad(ForgotPasswordActivity.this);
                 finish();
             }
         });
@@ -102,15 +109,15 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         if(flag!=0)
             Toast.makeText(this, "PLEASE ENTER PASSWORD CORRECTLY", Toast.LENGTH_SHORT).show();
         else{
-            ContentValues cv = new ContentValues();
-            cv.put(UserDataTable.PASSWORD,userpass);
-            if(UserDataTable.update(new MyOpenHelper(ForgotPasswordActivity.this).getWritableDatabase(),cv,UserDataTable.EMAIL + " = '" + resetpassEmail + "'")>0) {
-                Toast.makeText(this, "PASSWORD RESET SUCCESSFULLY", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(ForgotPasswordActivity.this,LoginPage.class));
-                finish();
-            }
-            else
-                Toast.makeText(this, "Password reset operation Failed!!!", Toast.LENGTH_SHORT).show();
+            FirebaseDatabase.getInstance().getReference("users").child(resetpassPhone).child("password").setValue(userconf+"");
+            Toast.makeText(this, "PASSWORD RESET SUCCESSFULLY.", Toast.LENGTH_SHORT).show();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            },2000);
         }
     }
 }

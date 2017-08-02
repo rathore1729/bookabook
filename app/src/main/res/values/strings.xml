@@ -11,7 +11,7 @@
         <item>-- Select Security Question --</item>
         <item>What was the name of your first pet?</item>
         <item>What was your first mobile number?</item>
-        <item>Which place do you want to visit at least once? </item>
+        <item>Which place do you want to visit? </item>
         <item>Who was your favourite primary teacher?</item>
         <item>What was your first vehicle\'s number?</item>
         <item>What was your first school name?</item>
@@ -19,9 +19,8 @@
     </string-array>
 
     <string-array name="sorting">
-        <item>Sort By</item>
-        <item>Newest</item>
         <item>Relevance</item>
+        <item>Newest</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->

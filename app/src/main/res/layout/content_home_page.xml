@@ -76,14 +76,17 @@
                     android:orientation="vertical"
                     android:gravity="center_horizontal"
                     android:onClick="showMagazine">
+
                     <ImageView
+                        android:id="@+id/imageView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/logomagazine"
-                        android:padding="5dp"
                         android:layout_margin="5dp"
+                        android:background="@drawable/lineback"
                         android:backgroundTint="#e4bebe"
-                        android:background="@drawable/lineback"/>
+                        android:padding="5dp"
+                        android:src="@drawable/logomagazine" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -266,13 +269,13 @@
                 android:textColor="#dad9d9"
                 android:background="@drawable/gradback"
                 android:padding="10dp"/>
-            <rathore.book_a_book.activity.MyViewPager
+            <rathore.book_a_book.pojos.MyViewPager
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/deal"
                 android:background="@drawable/lineback"
                 android:layout_below="@id/dealTitle">
-            </rathore.book_a_book.activity.MyViewPager>
+                </rathore.book_a_book.pojos.MyViewPager>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

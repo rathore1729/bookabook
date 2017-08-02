@@ -179,7 +179,6 @@ public class SignupPage extends AppCompatActivity {
     };
     
     private void validation() {
-        int flag = 0;
         String username = signName.getText().toString().trim();
         String usermail = signEmail.getText().toString().trim();
         String usercont_num = signNum.getText().toString();
@@ -286,6 +285,7 @@ public class SignupPage extends AppCompatActivity {
                         else {
                             user.setSEC_QUES(ques);
                             user.setANSWER(sec_ans.getText().toString().trim().toUpperCase());
+                            user.setDP("null");
                             FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                             DatabaseReference userRef = firebaseDatabase.getReference("users");
                             userRef.child(user.getPHONE()).setValue(user);
@@ -309,7 +309,7 @@ public class SignupPage extends AppCompatActivity {
         cv.put(UserDataTable.EMAIL,user.getEMAIL());
         cv.put(UserDataTable.PASSWORD,user.getPASSWORD());
         cv.put(UserDataTable.PHONE,user.getPHONE());
-        cv.put(UserDataTable.BACKCOLOR,user.getBACKCOLOR());
+        cv.put(UserDataTable.BACKCOLOR,0);
         cv.put(UserDataTable.SEC_QUES,user.getSEC_QUES());
         cv.put(UserDataTable.ANSWER,user.getANSWER());
         cv.put(UserDataTable.VERIFICATION,"false");
@@ -361,7 +361,8 @@ public class SignupPage extends AppCompatActivity {
                     user.setEMAIL(usermail);
                     user.setPASSWORD(userpass);
                     user.setPHONE(usercont_num);
-                    user.setBACKCOLOR();
+                    user.setADDRESS("none");
+                    user.setDP("none");
                     setSecurity(user);
                 } else{
                     final boolean finalEmailExists = emailExists;

@@ -6,4 +6,6 @@
     <color name="colorRedLight">#FD5C63</color>
     <color name="colorRedDark">#c16060</color>
     <color name="transparent">#00000000</color>
+    <color name="text_color">#e6e2e2e2</color>
+    <color name="hint_color">#b5e2e2e2</color>
 </resources>

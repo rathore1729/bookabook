@@ -26,7 +26,7 @@ public class DealFragment extends Fragment {
             return view;
         }
         else {
-            View view = inflater.inflate(R.layout.dealitem,container,false);
+            View view = inflater.inflate(R.layout.listitemdeal,container,false);
             TextView name,author,desc,price,mrp,disc;
             ImageView img;
             try{

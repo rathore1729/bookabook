@@ -1,13 +1,12 @@
 package rathore.book_a_book.activity;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -24,10 +23,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import rathore.book_a_book.R;
-import rathore.book_a_book.adapter.CategoryAdapter;
 import rathore.book_a_book.adapter.ListingAdapter;
 import rathore.book_a_book.pojos.BookDeal;
 import rathore.book_a_book.pojos.Links;
@@ -42,13 +39,21 @@ public class ProductListingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        /*if (getIntent().getAction().equals(Intent.ACTION_SEARCH)){
+            title = "Search Results";
+            link = getIntent().getStringExtra(SearchManager.QUERY);
+        } else {
+            title = getIntent().getStringExtra("title");
+            link = getIntent().getStringExtra("link");
+        }*/
         title = getIntent().getStringExtra("title");
         setTitle(title);
         setContentView(R.layout.activity_product_listing);
         init();
         methodListeners();
         webRequest();
-        arrayAdapter = new ListingAdapter(this,R.layout.listingitem,arrayList);
+        arrayAdapter = new ListingAdapter(this,R.layout.listitemlisting,arrayList);
         listing.setAdapter(arrayAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -61,6 +66,12 @@ public class ProductListingActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
     }
 
     private void init() {
@@ -99,7 +110,7 @@ public class ProductListingActivity extends AppCompatActivity {
                     String authStr="";
                     for (int j=0;j<auth.size();j++)
                         authStr = auth.get(j) + ",";
-                    deal.setAuthor("- " + authStr.substring(0,authStr.length()-1));
+                    deal.setAuthor("By " + authStr.substring(0,authStr.length()-1));
                 }catch (Exception ex){
                     deal.setAuthor("Published on : " + innerObj.get("publishedDate"));
                 }
@@ -144,11 +155,11 @@ public class ProductListingActivity extends AppCompatActivity {
         String request;
         final ProgressDialog dialog = new ProgressDialog(this);
         switch (spinner.getSelectedItemPosition()){
+            case 0 : request = link+ Links.RELEVANCE;
+                break;
             case 1 : request = link+ Links.NEWEST;
                 break;
-            case 2 : request = link+ Links.RELEVANCE;
-                break;
-            default: request = link;
+            default: request = link+ Links.RELEVANCE;
         }
         StringRequest rqst = new StringRequest(Request.Method.GET, request, new Response.Listener<String>() {
             @Override

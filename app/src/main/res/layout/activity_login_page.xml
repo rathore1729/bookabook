@@ -80,6 +80,9 @@
             android:id="@+id/forgot"
             android:layout_below="@id/loginbtn"
             android:text=" Forgot Password?"
+            android:textSize="12sp"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/new_user"
             android:clickable="true"
             android:textColor="#f1efef"/>
         <TextView
@@ -89,6 +92,7 @@
             android:layout_below="@id/loginbtn"
             android:layout_alignParentRight="true"
             android:text="New User? "
+            android:textSize="12sp"
             android:clickable="true"
             android:onClick="click"
             android:textColor="#60b7fd"/>

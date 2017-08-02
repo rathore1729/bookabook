@@ -12,8 +12,7 @@ public class UserPojo {
     private String PASSWORD;
     private String PHONE;
     private String ADDRESS;
-    private int BACKCOLOR;
-    private String VERIFICATION;
+    private String DP;
     private String SEC_QUES;
     private String ANSWER;
 
@@ -57,22 +56,12 @@ public class UserPojo {
         this.ADDRESS = ADDRESS;
     }
 
-    public int getBACKCOLOR() {
-        return BACKCOLOR;
+    public String getDP() {
+        return DP;
     }
 
-    public void setBACKCOLOR() {
-        int[] colors = {Color.rgb(50,0,250),Color.rgb(159,0,250),Color.rgb(85,143,250),Color.rgb(0,82,0),Color.rgb(0,155,0),Color.rgb(255,0,128),Color.rgb(250,0,0),Color.rgb(240,80,50),Color.rgb(240,80,100),Color.rgb(0,110,240),Color.rgb(240,110,60),Color.rgb(127,70,0),Color.rgb(63,127,127),Color.rgb(205,105,0),Color.rgb(220,143,120),Color.rgb(127,127,0),};
-        int seq = (int) (Math.random()*(colors.length-1));
-        this.BACKCOLOR = colors[seq];
-    }
-
-    public String isVERIFICATION() {
-        return VERIFICATION;
-    }
-
-    public void setVERIFICATION(String VERIFICATION) {
-        this.VERIFICATION = VERIFICATION;
+    public void setDP(String DP) {
+        this.DP = DP;
     }
 
     public String getSEC_QUES() {
@@ -89,5 +78,19 @@ public class UserPojo {
 
     public void setANSWER(String ANSWER) {
         this.ANSWER = ANSWER;
+    }
+
+    @Override
+    public String toString() {
+        return "UserPojo{" +
+                "NAME='" + NAME + '\'' +
+                ", EMAIL='" + EMAIL + '\'' +
+                ", PASSWORD='" + PASSWORD + '\'' +
+                ", PHONE='" + PHONE + '\'' +
+                ", ADDRESS='" + ADDRESS + '\'' +
+                ", DP='" + DP + '\'' +
+                ", SEC_QUES='" + SEC_QUES + '\'' +
+                ", ANSWER='" + ANSWER + '\'' +
+                '}';
     }
 }
